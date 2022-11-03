@@ -1,6 +1,8 @@
 import socket
+import erlang 
 import numpy as np
 import listado_codecs as lc
+
 
 # variables de entranda
 enlace = 4
@@ -12,6 +14,9 @@ Bw = 4000000
 Bw_res = 1.1
 Pb = 0
 cRTP = 0
+Nc = 150
+Nl = 20
+tpll = 3
 #########
 
 list_codec = lc.lista_Codecs()
@@ -48,10 +53,15 @@ x = list.copy()
 # Calcular Paso 4
 #########################################
 
+E = (Nc * Nl * tpll)/60.0
+print(E)
+nll = erlang.extended_b_lines(E, 0.003)
+
+print(nll) 
+
 ########################################
 
 # Calcular Paso 5
-nll = 160
 x = list.copy()
 
 if cRTP == 1:
