@@ -3,17 +3,19 @@ import numpy as np
 import listado_codecs as lc
 
 # variables de entranda
-enlace = 1
+enlace = 4
 mos = 4
 rt = 150
 rt_red = 75
 rt_jitter = 1.5*(30) # valor del jitter 
-Bw = 0
+Bw = 4000000
+Bw_res = 1.1
 Pb = 0
-
+cRTP = 0
+#########
 
 list_codec = lc.lista_Codecs()
-enlaces = ['1','2','3','4','5']
+enlaces = [18,22,26,26,30]
 
 list = []
 
@@ -25,6 +27,9 @@ for i in list_codec:
         list.append(i)
 
 print(list)
+if (len(list) == 0):
+    print('Coge un MOS inferior porque no cumple ninguno con el retardo')
+    exit()
 
 x = list.copy()
 # calcular retardo Paso 3
@@ -35,3 +40,51 @@ for i in x:
         list.remove(i)
 
 print(list)
+if (len(list) == 0):
+    print('Coge un MOS inferior porque no cumple ninguno con el retardo')
+    exit()
+
+x = list.copy()
+# Calcular Paso 4
+#########################################
+
+########################################
+
+# Calcular Paso 5
+nll = 160
+x = list.copy()
+
+if cRTP == 1:
+
+    payload = 4
+    cabecera = enlace + payload
+    print(cabecera)
+    for i in x:
+        bw = ((cabecera + i.getVPSb())*8) * i.getPPS()
+        bw *= nll * Bw_res
+        print(bw)
+        if bw > Bw:
+            list.remove(i) 
+
+else:
+
+    payload = 20 + 8 + 12
+    cabecera = enlace + payload
+    print(cabecera)
+    for i in x:
+        bw = ((cabecera + i.getVPSb())*8) * i.getPPS()
+        bw *= nll * Bw_res
+        print(bw)
+        if bw > Bw:
+            list.remove(i) 
+
+print(list)
+if (len(list) == 0):
+    print('Coge un MOS inferior porque no cumple ninguno con el retardo')
+    exit()
+
+# PASO 6 ############# Volver a hacer todo lo anterior
+
+
+
+
